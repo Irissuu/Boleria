@@ -3,7 +3,7 @@ package models;
 import enums.TipoBolo;
 
 public class Bolos {
-    private TipoBolo Sabor; // Alterado para TipoBolo
+    private TipoBolo Sabor;
     private String Fabricacao;
     private String Validade;
     private double Preco;

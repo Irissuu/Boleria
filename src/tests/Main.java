@@ -1,9 +1,11 @@
 package tests;
 
 import models.Bolos;
-import repository.GuardarBolosRepository;
 import repository.BolosRepository;
+import repository.GuardarBolosRepository;
 import enums.TipoBolo;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
         while (true) {
-            System.out.println("\uD83C\uDF70Bem-vindo à Doce Magia! Nossa Boleria\uD83C\uDF82 \nVeja o menu abaixo:");
+            System.out.println("\nVeja o menu abaixo:");
             System.out.println("[Menu]" +
                     "\n0- Sair" +
                     "\n1- Cadastrar" +
@@ -22,6 +24,9 @@ public class Main {
                     "\n4- Consultar por sabor" +
                     "\n5- Alterar" +
                     "\n6- Excluir" +
+                    "\n7- Buscar por código com forEach" +
+                    "\n8- Buscar por sabor com collect" +
+                    "\n9- Consultar bolos em ambas listas" +
                     "\nDigite a operação desejada: ");
             int op = leitor.nextInt();
             leitor.nextLine();
@@ -48,6 +53,15 @@ public class Main {
                 case 6:
                     excluir();
                     break;
+                case 7:
+                    buscarPorCodigoComForEach();
+                    break;
+                case 8:
+                    buscarPorSaborComCollect();
+                    break;
+                case 9:
+                    consultarBolosEmAmbasListas();
+                    break;
                 default:
                     System.out.println("Opção inválida. Tente novamente.");
             }
@@ -65,28 +79,7 @@ public class Main {
         int saborEscolhido = leitor.nextInt();
         leitor.nextLine();
 
-        TipoBolo sabor;
-        switch (saborEscolhido) {
-            case 1:
-                sabor = TipoBolo.BOLO_DE_CENOURA;
-                break;
-            case 2:
-                sabor = TipoBolo.BOLO_DE_CHOCOLATE;
-                break;
-            case 3:
-                sabor = TipoBolo.BOLO_DE_BAUNILHA;
-                break;
-            case 4:
-                sabor = TipoBolo.BOLO_DE_LARANJA;
-                break;
-            case 5:
-                sabor = TipoBolo.BOLO_DE_FESTA;
-                break;
-            default:
-                System.out.println("Opção inválida. Sabor definido como BOLO_DE_CENOURA.");
-                sabor = TipoBolo.BOLO_DE_CENOURA;
-                break;
-        }
+        TipoBolo sabor = obterTipoBolo(saborEscolhido);
 
         System.out.print("Digite o nome do bolo: ");
         String nome = leitor.nextLine();
@@ -146,27 +139,7 @@ public class Main {
         int saborEscolhido = leitor.nextInt();
         leitor.nextLine();
 
-        TipoBolo sabor;
-        switch (saborEscolhido) {
-            case 1:
-                sabor = TipoBolo.BOLO_DE_CENOURA;
-                break;
-            case 2:
-                sabor = TipoBolo.BOLO_DE_CHOCOLATE;
-                break;
-            case 3:
-                sabor = TipoBolo.BOLO_DE_BAUNILHA;
-                break;
-            case 4:
-                sabor = TipoBolo.BOLO_DE_LARANJA;
-                break;
-            case 5:
-                sabor = TipoBolo.BOLO_DE_FESTA;
-                break;
-            default:
-                System.out.println("Opção inválida. Consulta cancelada.");
-                return;
-        }
+        TipoBolo sabor = obterTipoBolo(saborEscolhido);
 
         List<Bolos> bolosList = repository.listar();
         boolean encontrado = false;
@@ -197,28 +170,7 @@ public class Main {
             int saborEscolhido = leitor.nextInt();
             leitor.nextLine();
 
-            TipoBolo sabor;
-            switch (saborEscolhido) {
-                case 1:
-                    sabor = TipoBolo.BOLO_DE_CENOURA;
-                    break;
-                case 2:
-                    sabor = TipoBolo.BOLO_DE_CHOCOLATE;
-                    break;
-                case 3:
-                    sabor = TipoBolo.BOLO_DE_BAUNILHA;
-                    break;
-                case 4:
-                    sabor = TipoBolo.BOLO_DE_LARANJA;
-                    break;
-                case 5:
-                    sabor = TipoBolo.BOLO_DE_FESTA;
-                    break;
-                default:
-                    System.out.println("Opção inválida. Sabor definido como BOLO_DE_CENOURA.");
-                    sabor = TipoBolo.BOLO_DE_CENOURA;
-                    break;
-            }
+            TipoBolo sabor = obterTipoBolo(saborEscolhido);
             bolo.setSabor(sabor);
 
             System.out.print("Digite o novo nome do bolo: ");
@@ -242,5 +194,64 @@ public class Main {
         String codigo = leitor.nextLine();
         repository.excluir(codigo);
         System.out.println("Bolo excluído com sucesso!");
+    }
+
+    private static void buscarPorCodigoComForEach() {
+        System.out.print("Digite o código do bolo para busca: ");
+        String codigo = leitor.nextLine();
+
+        ((GuardarBolosRepository) repository).buscarPorCodigoComForEach(codigo);
+    }
+
+    private static void buscarPorSaborComCollect() {
+        System.out.println("Escolha o sabor do bolo para busca:");
+        System.out.println("1 - BOLO_DE_CENOURA");
+        System.out.println("2 - BOLO_DE_CHOCOLATE");
+        System.out.println("3 - BOLO_DE_BAUNILHA");
+        System.out.println("4 - BOLO_DE_LARANJA");
+        System.out.println("5 - BOLO_DE_FESTA");
+        System.out.print("Digite o número correspondente ao sabor: ");
+        int saborEscolhido = leitor.nextInt();
+        leitor.nextLine();
+
+        TipoBolo sabor = obterTipoBolo(saborEscolhido);
+
+        List<Bolos> bolos = ((GuardarBolosRepository) repository).buscarPorSaborComCollect(sabor);
+        if (bolos.isEmpty()) {
+            System.out.println("Nenhum bolo com o sabor especificado foi encontrado.");
+        } else {
+            bolos.forEach(Bolos::exibirFichaTecnica);
+        }
+    }
+
+    private static void consultarBolosEmAmbasListas() {
+        System.out.println("Consultando bolos em ambas as listas...");
+        List<Bolos> outraLista = new ArrayList<>(repository.listar());
+
+        outraLista.addAll(repository.listar());
+
+        List<Bolos> bolosEmAmbasListas = ((GuardarBolosRepository) repository).consultarBolosEmAmbasListas(outraLista);
+        if (bolosEmAmbasListas.isEmpty()) {
+            System.out.println("Nenhum bolo encontrado em ambas as listas.");
+        } else {
+            bolosEmAmbasListas.forEach(Bolos::exibirFichaTecnica);
+        }
+    }
+
+    private static TipoBolo obterTipoBolo(int saborEscolhido) {
+        switch (saborEscolhido) {
+            case 1:
+                return TipoBolo.BOLO_DE_CENOURA;
+            case 2:
+                return TipoBolo.BOLO_DE_CHOCOLATE;
+            case 3:
+                return TipoBolo.BOLO_DE_BAUNILHA;
+            case 4:
+                return TipoBolo.BOLO_DE_LARANJA;
+            case 5:
+                return TipoBolo.BOLO_DE_FESTA;
+            default:
+                throw new IllegalArgumentException("Sabor inválido.");
+        }
     }
 }
