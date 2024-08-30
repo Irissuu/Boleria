@@ -1,9 +1,10 @@
 package tests;
-
 import models.Bolos;
-import repository.GuardarBolosRepository;
 import repository.BolosRepository;
+import repository.GuardarBolosRepository;
 import enums.TipoBolo;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -13,15 +14,17 @@ public class Main {
 
     public static void main(String[] args) {
         while (true) {
-            System.out.println("\uD83C\uDF70Bem-vindo à Doce Magia! Nossa Boleria\uD83C\uDF82 \nVeja o menu abaixo:");
-            System.out.println("[Menu]" +
+            System.out.println("\nVeja o menu abaixo:");
+            System.out.println("=====Menu=====" +
                     "\n0- Sair" +
                     "\n1- Cadastrar" +
                     "\n2- Listar" +
                     "\n3- Consultar por código" +
-                    "\n4- Consultar por sabor" +
-                    "\n5- Alterar" +
-                    "\n6- Excluir" +
+                    "\n4- Alterar" +
+                    "\n5- Excluir" +
+                    "\n6- Buscar sabor com forEach" +
+                    "\n7- Buscar sabor com collect" +
+                    "\n8- Consultar bolos em ambas as listas" +
                     "\nDigite a operação desejada: ");
             int op = leitor.nextInt();
             leitor.nextLine();
@@ -40,22 +43,28 @@ public class Main {
                     consultarPorCodigo();
                     break;
                 case 4:
-                    consultarPorSabor();
-                    break;
-                case 5:
                     alterar();
                     break;
-                case 6:
+                case 5:
                     excluir();
                     break;
+                case 6:
+                    buscarSaborForEach();
+                    break;
+                case 7:
+                    buscarSaborCollect();
+                    break;
+                case 8:
+                    consultarBolosListas();
+                    break;
                 default:
-                    System.out.println("Opção inválida. Tente novamente.");
+                    System.out.println("Opção inválida. Por favor tente novamente.");
             }
         }
     }
 
     private static void cadastrar() {
-        System.out.println("Escolha o sabor do bolo:");
+        System.out.println("Escolha o sabor do bolo: ");
         System.out.println("1 - BOLO_DE_CENOURA");
         System.out.println("2 - BOLO_DE_CHOCOLATE");
         System.out.println("3 - BOLO_DE_BAUNILHA");
@@ -65,38 +74,21 @@ public class Main {
         int saborEscolhido = leitor.nextInt();
         leitor.nextLine();
 
-        TipoBolo sabor;
-        switch (saborEscolhido) {
-            case 1:
-                sabor = TipoBolo.BOLO_DE_CENOURA;
-                break;
-            case 2:
-                sabor = TipoBolo.BOLO_DE_CHOCOLATE;
-                break;
-            case 3:
-                sabor = TipoBolo.BOLO_DE_BAUNILHA;
-                break;
-            case 4:
-                sabor = TipoBolo.BOLO_DE_LARANJA;
-                break;
-            case 5:
-                sabor = TipoBolo.BOLO_DE_FESTA;
-                break;
-            default:
-                System.out.println("Opção inválida. Sabor definido como BOLO_DE_CENOURA.");
-                sabor = TipoBolo.BOLO_DE_CENOURA;
-                break;
-        }
+        TipoBolo sabor = obterTipoBolo(saborEscolhido);
 
         System.out.print("Digite o nome do bolo: ");
         String nome = leitor.nextLine();
+
         System.out.print("Digite a data de fabricação (no formato DD-MM-AAAA): ");
         String fabricacao = leitor.nextLine();
+
         System.out.print("Digite a data de validade (no formato DD-MM-AAAA): ");
         String validade = leitor.nextLine();
+
         System.out.print("Digite o preço: ");
         double preco = leitor.nextDouble();
         leitor.nextLine();
+
         System.out.print("Digite o código do bolo: ");
         String codigo = leitor.nextLine();
 
@@ -135,53 +127,6 @@ public class Main {
         }
     }
 
-    private static void consultarPorSabor() {
-        System.out.println("Escolha o sabor do bolo para consulta:");
-        System.out.println("1 - BOLO_DE_CENOURA");
-        System.out.println("2 - BOLO_DE_CHOCOLATE");
-        System.out.println("3 - BOLO_DE_BAUNILHA");
-        System.out.println("4 - BOLO_DE_LARANJA");
-        System.out.println("5 - BOLO_DE_FESTA");
-        System.out.print("Digite o número correspondente ao sabor: ");
-        int saborEscolhido = leitor.nextInt();
-        leitor.nextLine();
-
-        TipoBolo sabor;
-        switch (saborEscolhido) {
-            case 1:
-                sabor = TipoBolo.BOLO_DE_CENOURA;
-                break;
-            case 2:
-                sabor = TipoBolo.BOLO_DE_CHOCOLATE;
-                break;
-            case 3:
-                sabor = TipoBolo.BOLO_DE_BAUNILHA;
-                break;
-            case 4:
-                sabor = TipoBolo.BOLO_DE_LARANJA;
-                break;
-            case 5:
-                sabor = TipoBolo.BOLO_DE_FESTA;
-                break;
-            default:
-                System.out.println("Opção inválida. Consulta cancelada.");
-                return;
-        }
-
-        List<Bolos> bolosList = repository.listar();
-        boolean encontrado = false;
-        for (Bolos bolo : bolosList) {
-            if (bolo.getSabor() == sabor) {
-                bolo.exibirFichaTecnica();
-                System.out.println();
-                encontrado = true;
-            }
-        }
-        if (!encontrado) {
-            System.out.println("Nenhum bolo com o sabor especificado foi encontrado.");
-        }
-    }
-
     private static void alterar() {
         System.out.print("Digite o código do bolo para alteração: ");
         String codigo = leitor.nextLine();
@@ -197,36 +142,19 @@ public class Main {
             int saborEscolhido = leitor.nextInt();
             leitor.nextLine();
 
-            TipoBolo sabor;
-            switch (saborEscolhido) {
-                case 1:
-                    sabor = TipoBolo.BOLO_DE_CENOURA;
-                    break;
-                case 2:
-                    sabor = TipoBolo.BOLO_DE_CHOCOLATE;
-                    break;
-                case 3:
-                    sabor = TipoBolo.BOLO_DE_BAUNILHA;
-                    break;
-                case 4:
-                    sabor = TipoBolo.BOLO_DE_LARANJA;
-                    break;
-                case 5:
-                    sabor = TipoBolo.BOLO_DE_FESTA;
-                    break;
-                default:
-                    System.out.println("Opção inválida. Sabor definido como BOLO_DE_CENOURA.");
-                    sabor = TipoBolo.BOLO_DE_CENOURA;
-                    break;
-            }
+            TipoBolo sabor = obterTipoBolo(saborEscolhido);
             bolo.setSabor(sabor);
+
 
             System.out.print("Digite o novo nome do bolo: ");
             bolo.setNome(leitor.nextLine());
+
             System.out.print("Digite a nova data de fabricação (no formato DD-MM-AAAA): ");
             bolo.setFabricacao(leitor.nextLine());
+
             System.out.print("Digite a nova data de validade (no formato DD-MM-AAAA): ");
             bolo.setValidade(leitor.nextLine());
+
             System.out.print("Digite o novo preço: ");
             bolo.setPreco(leitor.nextDouble());
             leitor.nextLine();
@@ -242,5 +170,74 @@ public class Main {
         String codigo = leitor.nextLine();
         repository.excluir(codigo);
         System.out.println("Bolo excluído com sucesso!");
+    }
+
+    private static void buscarSaborForEach() {
+        System.out.println("Escolha o sabor do bolo para busca:");
+        System.out.println("1 - BOLO_DE_CENOURA");
+        System.out.println("2 - BOLO_DE_CHOCOLATE");
+        System.out.println("3 - BOLO_DE_BAUNILHA");
+        System.out.println("4 - BOLO_DE_LARANJA");
+        System.out.println("5 - BOLO_DE_FESTA");
+        System.out.print("Digite o número correspondente ao sabor: ");
+        int saborEscolhido = leitor.nextInt();
+        leitor.nextLine();
+
+        TipoBolo sabor = obterTipoBolo(saborEscolhido);
+
+        ((GuardarBolosRepository) repository).buscarPorSaborComForEach(sabor);
+    }
+
+    private static void buscarSaborCollect() {
+        System.out.println("Escolha o sabor do bolo para busca:");
+        System.out.println("1 - BOLO_DE_CENOURA");
+        System.out.println("2 - BOLO_DE_CHOCOLATE");
+        System.out.println("3 - BOLO_DE_BAUNILHA");
+        System.out.println("4 - BOLO_DE_LARANJA");
+        System.out.println("5 - BOLO_DE_FESTA");
+        System.out.print("Digite o número correspondente ao sabor: ");
+        int saborEscolhido = leitor.nextInt();
+        leitor.nextLine();
+
+        TipoBolo sabor = obterTipoBolo(saborEscolhido);
+
+        List<Bolos> bolos = ((GuardarBolosRepository) repository).buscarSaborCollect(sabor);
+        if (bolos.isEmpty()) {
+            System.out.println("Nenhum bolo com o sabor indicado foi encontrado.");
+        } else {
+            bolos.forEach(Bolos::exibirFichaTecnica);
+        }
+    }
+
+    private static void consultarBolosListas() {
+        System.out.println("Consultando bolos em ambas listas");
+        List<Bolos> outraLista = new ArrayList<>(repository.listar());
+
+        outraLista.addAll(repository.listar());
+
+        List<Bolos> bolosAmbasListas = ((GuardarBolosRepository) repository).consultarBolosListas(outraLista);
+        if (bolosAmbasListas.isEmpty()) {
+            System.out.println("Nenhum bolo encontrado em ambas listas.");
+        } else {
+            bolosAmbasListas.forEach(Bolos::exibirFichaTecnica);
+        }
+    }
+
+    private static TipoBolo obterTipoBolo(int saborEscolhido) {
+        switch (saborEscolhido) {
+            case 1:
+                return TipoBolo.BOLO_DE_CENOURA;
+            case 2:
+                return TipoBolo.BOLO_DE_CHOCOLATE;
+            case 3:
+                return TipoBolo.BOLO_DE_BAUNILHA;
+            case 4:
+                return TipoBolo.BOLO_DE_LARANJA;
+            case 5:
+                return TipoBolo.BOLO_DE_FESTA;
+            default:
+                System.out.println("Opção inválida. Sabor definido como BOLO_DE_CENOURA.");
+                return TipoBolo.BOLO_DE_CENOURA;
+        }
     }
 }

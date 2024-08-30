@@ -3,66 +3,66 @@ package models;
 import enums.TipoBolo;
 
 public class Bolos {
-    private TipoBolo Sabor; // Alterado para TipoBolo
-    private String Fabricacao;
-    private String Validade;
-    private double Preco;
-    private String Codigo;
-    private String Nome;
+    private TipoBolo sabor;
+    private String fabricacao;
+    private String validade;
+    private double preco;
+    private String codigo;
+    private String nome;
 
     public void exibirFichaTecnica() {
-        System.out.println("Sabor: " + Sabor);
-        System.out.println("Preço: " + Preco);
-        System.out.println("Código do Produto: " + Codigo);
-        System.out.println("Data de Fabricação: " + Fabricacao);
-        System.out.println("Data de Validade: " + Validade);
+        System.out.println("Sabor: " + sabor);
+        System.out.println("Preço: " + preco);
+        System.out.println("Código do Produto: " + codigo);
+        System.out.println("Data de Fabricação: " + fabricacao);
+        System.out.println("Data de Validade: " + validade);
     }
 
     public TipoBolo getSabor() {
-        return Sabor;
+        return sabor;
     }
 
     public void setSabor(TipoBolo sabor) {
-        Sabor = sabor;
+        this.sabor = sabor;
     }
 
     public String getFabricacao() {
-        return Fabricacao;
+        return fabricacao;
     }
 
     public void setFabricacao(String fabricacao) {
-        Fabricacao = fabricacao;
+        this.fabricacao = fabricacao;
     }
 
     public String getValidade() {
-        return Validade;
+        return validade;
     }
 
     public void setValidade(String validade) {
-        Validade = validade;
+        this.validade = validade;
     }
 
     public double getPreco() {
-        return Preco;
+        return preco;
     }
 
     public void setPreco(double preco) {
-        Preco = preco;
+        this.preco = preco;
     }
 
     public String getCodigo() {
-        return Codigo;
+        return codigo;
     }
 
     public void setCodigo(String codigo) {
-        Codigo = codigo;
+        this.codigo = codigo;
     }
 
     public String getNome() {
-        return Nome;
+        return nome;
     }
 
     public void setNome(String nome) {
-        this.Nome = nome;
+        this.nome = nome;
     }
 }

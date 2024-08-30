@@ -1,8 +1,10 @@
 package repository;
 
 import models.Bolos;
+import enums.TipoBolo;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GuardarBolosRepository implements BolosRepository {
     private List<Bolos> bolosList = new ArrayList<>();
@@ -19,12 +21,10 @@ public class GuardarBolosRepository implements BolosRepository {
 
     @Override
     public Bolos consultarPorCodigo(String codigo) {
-        for (Bolos bolo : bolosList) {
-            if (bolo.getCodigo().equals(String.valueOf(codigo))) {
-                return bolo;
-            }
-        }
-        return null;
+        return bolosList.stream()
+                .filter(bolo -> bolo.getCodigo().equals(codigo))
+                .findFirst()
+                .orElse(null);
     }
 
     @Override
@@ -39,6 +39,27 @@ public class GuardarBolosRepository implements BolosRepository {
 
     @Override
     public void excluir(String codigo) {
-        bolosList.removeIf(bolo -> bolo.getCodigo().equals(String.valueOf(codigo)));
+        bolosList.removeIf(bolo -> bolo.getCodigo().equals(codigo));
+    }
+
+    public void buscarPorSaborComForEach(TipoBolo sabor) {
+        bolosList.stream()
+                .filter(bolo -> bolo.getSabor() == sabor) // Usando filter
+                .forEach(bolo -> {
+                    bolo.exibirFichaTecnica();
+                    System.out.println();
+                });
+    }
+
+    public List<Bolos> buscarSaborCollect(TipoBolo sabor) {
+        return bolosList.stream()
+                .filter(bolo -> bolo.getSabor() == sabor) // Usando filter
+                .collect(Collectors.toList()); // Usando collect
+    }
+
+    public List<Bolos> consultarBolosListas(List<Bolos> outraLista) {
+        return bolosList.stream()
+                .filter(outraLista::contains) // Usando filter
+                .collect(Collectors.toList()); // Usando collect
     }
 }
