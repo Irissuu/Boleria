@@ -90,9 +90,9 @@ public class Main {
 
         System.out.print("Digite o nome do bolo: ");
         String nome = leitor.nextLine();
-        System.out.print("Digite a data de fabricação (no formato YYYY-MM-DD): ");
+        System.out.print("Digite a data de fabricação (no formato DD-MM-AAAA): ");
         String fabricacao = leitor.nextLine();
-        System.out.print("Digite a data de validade (no formato YYYY-MM-DD): ");
+        System.out.print("Digite a data de validade (no formato DD-MM-AAAA): ");
         String validade = leitor.nextLine();
         System.out.print("Digite o preço: ");
         double preco = leitor.nextDouble();
@@ -223,9 +223,9 @@ public class Main {
 
             System.out.print("Digite o novo nome do bolo: ");
             bolo.setNome(leitor.nextLine());
-            System.out.print("Digite a nova data de fabricação (no formato YYYY-MM-DD): ");
+            System.out.print("Digite a nova data de fabricação (no formato DD-MM-AAAA): ");
             bolo.setFabricacao(leitor.nextLine());
-            System.out.print("Digite a nova data de validade (no formato YYYY-MM-DD): ");
+            System.out.print("Digite a nova data de validade (no formato DD-MM-AAAA): ");
             bolo.setValidade(leitor.nextLine());
             System.out.print("Digite o novo preço: ");
             bolo.setPreco(leitor.nextDouble());
